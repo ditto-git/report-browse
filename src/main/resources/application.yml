@@ -1,0 +1,38 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+
+ # main:
+  #  allow-circular-references: true
+
+
+logging:
+  level:
+    # 指定mybatis的mapper映射配置文件的包路径
+    com.ditto.hex.hex_console.mapper: debug
+
+mybatis-plus:
+  type-aliases-package: com.ditto.report_browse.*.entity
+                        com.ditto.report_browse.tex_component.tex_console.entity
+
+  mapper-locations: classpath*:/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+
+
+
+
+
+
+
+
+
+
+
+

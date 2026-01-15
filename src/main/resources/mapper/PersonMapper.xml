@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ditto.report_browse.employee.mapper.PersonMapper">
+    <select id="HMC_XZ0"  >
+        select
+            pernr,
+            name,
+            sex,
+            birthday,
+            major,
+            org,
+            id_number,
+            position_all,
+            last_position,
+            top_position,
+            cast(score1 as DECIMAL(9,2))score1,
+            cast(score2 as DECIMAL(9,2))score2,
+            cast(score3 as DECIMAL(9,2))score3,
+            cast(score4 as DECIMAL(9,2))score4,
+            cast(score5 as DECIMAL(9,2))score5
+        from person p
+
+                 left join
+             (
+                 select
+                     pernr as pp_pernr,
+                     position_all,
+                     case
+                         when position_all is null then ''else SUBSTRING_INDEX(position_all,',', 1) end as last_position,
+                     case
+                         when position_all is null then '' when INSTR(position_all, ',')=0 then '' else SUBSTRING_INDEX(position_all,',', -1) end as top_position
+                 from
+                     (select pernr ,GROUP_CONCAT(position ORDER by end_Time desc SEPARATOR ',')as position_all FROM
+                         person_position
+                      /*where pernr in('0000001','0000002','0000003','0000004')*/
+                      GROUP BY
+                          pernr) t
+             ) pp
+             on p.pernr=pp.pp_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps1_pernr,
+                     score as score1
+                 from person_score
+                 where `year` = concat('',2025-1) /* and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps1
+             on p.pernr=ps1.ps1_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps2_pernr,
+                     score as score2
+                 from person_score
+                 where `year` = concat('',2025-2)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps2
+             on p.pernr=ps2.ps2_pernr
+
+                 left join
+             (
+
+                 select
+                     pernr as ps3_pernr,
+                     score as score3
+                 from person_score
+                 where `year` = concat('',2025-3)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps3
+             on p.pernr=ps3.ps3_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps4_pernr,
+                     score as score4
+                 from person_score
+                 where `year` = concat('',2025-4)
+             ) ps4
+             on p.pernr=ps4.ps4_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps5_pernr,
+                     score as score5
+                 from person_score
+                 where `year` = concat('',2025-5)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps5
+             on p.pernr=ps5.ps5_pernr
+        /* where  pernr in('0000001','0000002','0000003','0000004')*/
+
+
+
+
+
+
+
+
+
+    </select>
+    
+ <select id="HMC_XZ"  >
+     select
+         pernr,
+         name,
+         sex,
+         birthday,
+         major,
+         org,
+         id_number,
+         position_all,
+         last_position,
+         top_position,
+         cast(score1 as DECIMAL(9,2))score1,
+         cast(score2 as DECIMAL(9,2))score2,
+         cast(score3 as DECIMAL(9,2))score3,
+         cast(score4 as DECIMAL(9,2))score4,
+         cast(score5 as DECIMAL(9,2))score5
+     from person p
+
+              left join
+          (
+              select
+                  pernr as pp_pernr,
+                  position_all,
+                  case
+                      when position_all is null then ''else SUBSTRING_INDEX(position_all,',', 1) end as last_position,
+                  case
+                      when position_all is null then '' when INSTR(position_all, ',')=0 then '' else SUBSTRING_INDEX(position_all,',', -1) end as top_position
+              from
+                  (select pernr ,GROUP_CONCAT(position ORDER by end_Time desc SEPARATOR ',')as position_all FROM
+                      person_position
+                   /*where pernr in('0000001','0000002','0000003','0000004')*/
+                   GROUP BY
+                       pernr) t
+          ) pp
+          on p.pernr=pp.pp_pernr
+
+              left join
+          (
+              select
+                  pernr as ps1_pernr,
+                  score as score1
+              from person_score
+              where `year` = concat('',2025-1) /* and pernr in('0000001','0000002','0000003','0000004')*/
+          ) ps1
+          on p.pernr=ps1.ps1_pernr
+
+              left join
+          (
+              select
+                  pernr as ps2_pernr,
+                  score as score2
+              from person_score
+              where `year` = concat('',2025-2)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+          ) ps2
+          on p.pernr=ps2.ps2_pernr
+
+              left join
+          (
+
+              select
+                  pernr as ps3_pernr,
+                  score as score3
+              from person_score
+              where `year` = concat('',2025-3)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+          ) ps3
+          on p.pernr=ps3.ps3_pernr
+
+              left join
+          (
+              select
+                  pernr as ps4_pernr,
+                  score as score4
+              from person_score
+              where `year` = concat('',2025-4)
+          ) ps4
+          on p.pernr=ps4.ps4_pernr
+
+              left join
+          (
+              select
+                  pernr as ps5_pernr,
+                  score as score5
+              from person_score
+              where `year` = concat('',2025-5)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+          ) ps5
+          on p.pernr=ps5.ps5_pernr
+    /* where  pernr in('0000001','0000002','0000003','0000004')*/
+
+
+
+
+
+
+
+
+
+ </select>
+
+
+
+    <select id="HMC_XZ1"  >
+        select
+            pernr,
+            name,
+            sex,
+            birthday,
+            major,
+            org,
+            id_number,
+            position_all,
+            last_position,
+            top_position,
+            cast(score1 as DECIMAL(9,2))score1,
+            cast(score2 as DECIMAL(9,2))score2,
+            cast(score3 as DECIMAL(9,2))score3,
+            cast(score4 as DECIMAL(9,2))score4,
+            cast(score5 as DECIMAL(9,2))score5
+        from person p
+
+                 left join
+             (
+                 select
+                     pernr as pp_pernr,
+                     position_all,
+                     case
+                         when position_all is null then ''else SUBSTRING_INDEX(position_all,',', 1) end as last_position,
+                     case
+                         when position_all is null then '' when INSTR(position_all, ',')=0 then '' else SUBSTRING_INDEX(position_all,',', -1) end as top_position
+                 from
+                     (select pernr ,GROUP_CONCAT(position ORDER by end_Time desc SEPARATOR ',')as position_all FROM
+                         person_position
+                      /*where pernr in('0000001','0000002','0000003','0000004')*/
+                      GROUP BY
+                          pernr) t
+             ) pp
+             on p.pernr=pp.pp_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps1_pernr,
+                     score as score1
+                 from person_score
+                 where `year` = concat('',2025-1) /* and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps1
+             on p.pernr=ps1.ps1_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps2_pernr,
+                     score as score2
+                 from person_score
+                 where `year` = concat('',2025-2)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps2
+             on p.pernr=ps2.ps2_pernr
+
+                 left join
+             (
+
+                 select
+                     pernr as ps3_pernr,
+                     score as score3
+                 from person_score
+                 where `year` = concat('',2025-3)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps3
+             on p.pernr=ps3.ps3_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps4_pernr,
+                     score as score4
+                 from person_score
+                 where `year` = concat('',2025-4)
+             ) ps4
+             on p.pernr=ps4.ps4_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps5_pernr,
+                     score as score5
+                 from person_score
+                 where `year` = concat('',2025-5)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps5
+             on p.pernr=ps5.ps5_pernr
+        /* where  pernr in('0000001','0000002','0000003','0000004')*/
+
+
+
+            limit 0,998
+
+
+
+
+
+    </select>
+
+
+
+    <select id="HMC_XZ2"  >
+        select
+            pernr,
+            name,
+            sex,
+            birthday,
+            major,
+            org,
+            id_number,
+            position_all,
+            last_position,
+            top_position,
+            cast(score1 as DECIMAL(9,2))score1,
+            cast(score2 as DECIMAL(9,2))score2,
+            cast(score3 as DECIMAL(9,2))score3,
+            cast(score4 as DECIMAL(9,2))score4,
+            cast(score5 as DECIMAL(9,2))score5
+        from person p
+
+                 left join
+             (
+                 select
+                     pernr as pp_pernr,
+                     position_all,
+                     case
+                         when position_all is null then ''else SUBSTRING_INDEX(position_all,',', 1) end as last_position,
+                     case
+                         when position_all is null then '' when INSTR(position_all, ',')=0 then '' else SUBSTRING_INDEX(position_all,',', -1) end as top_position
+                 from
+                     (select pernr ,GROUP_CONCAT(position ORDER by end_Time desc SEPARATOR ',')as position_all FROM
+                         person_position
+                      /*where pernr in('0000001','0000002','0000003','0000004')*/
+                      GROUP BY
+                          pernr) t
+             ) pp
+             on p.pernr=pp.pp_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps1_pernr,
+                     score as score1
+                 from person_score
+                 where `year` = concat('',2025-1) /* and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps1
+             on p.pernr=ps1.ps1_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps2_pernr,
+                     score as score2
+                 from person_score
+                 where `year` = concat('',2025-2)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps2
+             on p.pernr=ps2.ps2_pernr
+
+                 left join
+             (
+
+                 select
+                     pernr as ps3_pernr,
+                     score as score3
+                 from person_score
+                 where `year` = concat('',2025-3)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps3
+             on p.pernr=ps3.ps3_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps4_pernr,
+                     score as score4
+                 from person_score
+                 where `year` = concat('',2025-4)
+             ) ps4
+             on p.pernr=ps4.ps4_pernr
+
+                 left join
+             (
+                 select
+                     pernr as ps5_pernr,
+                     score as score5
+                 from person_score
+                 where `year` = concat('',2025-5)  /*and pernr in('0000001','0000002','0000003','0000004')*/
+             ) ps5
+             on p.pernr=ps5.ps5_pernr
+        /* where  pernr in('0000001','0000002','0000003','0000004')*/
+
+
+
+            limit 998,2000
+
+
+
+
+    </select>
+
+
+    <select id="RY_CJ">
+        select
+            person.pernr,
+            person.sex,
+            person.name,
+            cast(ps1.score as DECIMAL(9,2))score1,
+            cast(ps2.score as DECIMAL(9,2))score2,
+            cast(ps3.score as DECIMAL(9,2))score3
+        from  person
+                  left join  person_score  ps1 on person.pernr =ps1.pernr  and ps1.`year` ="2024"
+                  left join  person_score  ps2 on person.pernr =ps2.pernr  and ps2.`year` ="2023"
+                  left join  person_score  ps3 on person.pernr =ps3.pernr  and ps3.`year` ="2022"
+
+    </select>
+
+
+
+    <select id="RY_CJ1">
+        select
+            person.pernr,
+            person.sex,
+            person.name,
+            cast(ps1.score as DECIMAL(9,2))score1,
+            cast(ps2.score as DECIMAL(9,2))score2,
+            cast(ps3.score as DECIMAL(9,2))score3
+        from  person
+                  left join  person_score  ps1 on person.pernr =ps1.pernr  and ps1.`year` ="2024"
+                  left join  person_score  ps2 on person.pernr =ps2.pernr  and ps2.`year` ="2023"
+                  left join  person_score  ps3 on person.pernr =ps3.pernr  and ps3.`year` ="2022"
+        limit 0,2000
+    </select>
+
+
+    <select id="RY_CJ2">
+        select
+            person.pernr,
+            person.sex,
+            person.name,
+            cast(ps1.score as DECIMAL(9,2))score1,
+            cast(ps2.score as DECIMAL(9,2))score2,
+            cast(ps3.score as DECIMAL(9,2))score3
+        from  person
+                  left join  person_score  ps1 on person.pernr =ps1.pernr  and ps1.`year` ="2024"
+                  left join  person_score  ps2 on person.pernr =ps2.pernr  and ps2.`year` ="2023"
+                  left join  person_score  ps3 on person.pernr =ps3.pernr  and ps3.`year` ="2022"
+            limit 2001,2000
+    </select>
+
+
+
+
+
+</mapper>
