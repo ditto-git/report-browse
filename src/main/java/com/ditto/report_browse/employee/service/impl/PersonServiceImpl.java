@@ -117,8 +117,7 @@ public class PersonServiceImpl implements PersonService {
     //单位分页
     public void HMC_XZ_S(HttpServletResponse response){
         long l = System.currentTimeMillis();
-        TexTemplate texTemplate = exTemplateMapper.getExTemplate("HMC_XZ");
-        texTemplate.setFileName(texTemplate.getFileName()+"(单位)");
+        TexTemplate texTemplate = exTemplateMapper.getExTemplate("HMC_XZ_S");
         TexThreadLocal.setExTemplate(texTemplate);
 
         //核心：用TTL包装线程池（一行代码，仅此而已）
@@ -135,7 +134,7 @@ public class PersonServiceImpl implements PersonService {
                     synchronized (export){
                         List<IndexSetCellData> otherData = new ArrayList<>();
                         otherData.add(new IndexSetCellData(1,0,"单位"+pageNum,true));
-                        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+                        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.CHINA);;
                         otherData.add(new IndexSetCellData(1,13,"数据日期:"+ LocalDate.now().format(timeFormatter),true));
                         String sheetName="单位"+pageNum+" 现职人员花名册";
                         export.copyHeed(true).sheetName(sheetName).rowIndex(0).count(1).dataList(maps).otherCellData(otherData).write();
@@ -181,7 +180,7 @@ public class PersonServiceImpl implements PersonService {
                        synchronized (export){
                            List<IndexSetCellData> otherData = new ArrayList<>();
                            otherData.add(new IndexSetCellData(1,0,"单位"+pageNum,true));
-                           DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+                           DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.CHINA);;;
                            otherData.add(new IndexSetCellData(1,13,"数据日期:"+ LocalDate.now().format(timeFormatter),true));
                            export.copyHeed(true).interval(3).count(1).dataList(maps).otherCellData(otherData).write();
                        }
@@ -215,39 +214,27 @@ public class PersonServiceImpl implements PersonService {
     public void HMC_XZ(HttpServletResponse response){
         long l = System.currentTimeMillis();
         TexThreadLocal.setExTemplate(exTemplateMapper.getExTemplate("HMC_XZ"));
-        TexTemplate TexTemplate = TexThreadLocal.getExTemplate();
-
-        List<IndexSetCellData> otherData = new ArrayList<>();
-        otherData.add(new IndexSetCellData(1,0,"数据1",true));
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
-        otherData.add(new IndexSetCellData(1,13,"数据日期:"+ LocalDate.now().format(timeFormatter),true));
-
-
-        ExecutorService executorService = Executors.newFixedThreadPool(15);
+        ExecutorService executorService = TtlExecutors.getTtlExecutorService( Executors.newFixedThreadPool(15));
         CountDownLatch countDownLatch = new CountDownLatch(15);
-        Map<Integer, List<Map<String, Object>>> dataMap = new TreeMap<>();
         GoExport goExport =(export)->{
             for(int i=0;i<15;i++){
                 int pageNum = i+1;
                 int pageSize = 10000;
                 executorService.execute(()->{
-                    TexThreadLocal.setExTemplate(TexTemplate);
-                    dataMap.put(pageNum,personMapper.HMC_XZ(new Page<>(pageNum,pageSize,false)));
-
+                    List<Map<String, Object>> maps = personMapper.HMC_XZ(new Page<>(pageNum, pageSize, false));
+                    synchronized (export){
+                    export.dataList(maps).write();
+                    TexThreadLocal.clear();
                     countDownLatch.countDown();
+                    }
                 });
             }
-
             try {
                 countDownLatch.await();
                     executorService.shutdown();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            dataMap.forEach((k,v)->{
-                export.dataList(v).otherCellData(otherData).write();
-            });
-
       };
 
      sxssfExportOrdinaryContext.sxssfExportOrdinary().export(response, goExport);
@@ -351,6 +338,9 @@ public class PersonServiceImpl implements PersonService {
             data = personMapper.HMC_XZ(page);
         }
         if ("HMC_XZ_N".equals(templateCode)) {
+            data = personMapper.HMC_XZ(page);
+        }
+        if ("HMC_XZ_S".equals(templateCode)) {
             data = personMapper.HMC_XZ(page);
         }
         page.setRecords(data);

@@ -141,7 +141,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.ditto.report_browse.ReportBrowseApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
