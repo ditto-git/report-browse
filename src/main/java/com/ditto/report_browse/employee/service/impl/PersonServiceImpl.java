@@ -56,7 +56,7 @@ public class PersonServiceImpl implements PersonService {
         TexThreadLocal.setExTemplate(exTemplateMapper.getExTemplate("HMC_XZ"));
         ExportFileResponseUtil responseUtil = new ExportFileResponseUtil(response, TexThreadLocal.getExTemplate().getFileName(), "xlsx");
         List<Map<String, Object>> maps = personMapper.HMC_XZ();
-        ExFormula.cellFormulaMatch(TexThreadLocal.getExFormulas(),maps);
+        TexFormulaUtil.cellFormulaMatch(TexThreadLocal.getExFormulas(),maps);
         long startTime = System.currentTimeMillis();
         OSSUtil.downloadOSSInput(TexThreadLocal.getExTemplate().getTemplateUrl(), new OSSInputOperate() {
             @Override
@@ -247,7 +247,7 @@ public class PersonServiceImpl implements PersonService {
     public void RY_CJ(HttpServletResponse response){
         long l = System.currentTimeMillis();
         TexThreadLocal.setExTemplate(exTemplateMapper.getExTemplate("RY_CJ"));
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.CHINA);
         GoExport goExport =(export)->{
             export.dataList(personMapper.RY_CJ(null)).otherCellData(new IndexSetCellData(1, 0, LocalDate.now().format(timeFormatter), true)).write();
         };
@@ -261,7 +261,7 @@ public class PersonServiceImpl implements PersonService {
         TexTemplate texTemplate = exTemplateMapper.getExTemplate("RY_CJ");
         texTemplate.setFileName(texTemplate.getFileName()+"(new)");
         TexThreadLocal.setExTemplate(texTemplate);
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.CHINA);
         GoExport goExport =(export)->{
             List<Map<String, Object>> maps = personMapper.RY_CJ(new Page<>(1, 10000, false));
             export.copyHeed(true).interval(2).dataList(maps).otherCellData(new IndexSetCellData(1, 0, LocalDate.now().format(timeFormatter), true)).write();
@@ -282,7 +282,7 @@ public class PersonServiceImpl implements PersonService {
         ExecutorService executorService = TtlExecutors.getTtlExecutorService(Executors.newFixedThreadPool(15));
         CountDownLatch countDownLatch = new CountDownLatch(15);
 
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.CHINA);
         IndexSetCellData indexSetCellData = new IndexSetCellData(1, 0,"日期： "+ LocalDate.now().format(timeFormatter), true);
 
         GoExport goExport =(export)->{
