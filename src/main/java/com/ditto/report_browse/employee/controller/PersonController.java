@@ -28,6 +28,10 @@ public class PersonController {
     public void HMC_XZ_N(HttpServletResponse response) {
         personService.HMC_XZ_N(response);
     }
+    @RequestMapping("/HMC_XZ_E")
+    public void HMC_XZ_E(HttpServletResponse response) {
+        personService.HMC_XZ_E(response);
+    }
 
     @RequestMapping("/HMC_XZ")
     public void HMC_XZ(HttpServletResponse response) {

@@ -14,6 +14,7 @@ public interface PersonService {
    void HMC_XZ(HttpServletResponse response);
    void HMC_XZ_S(HttpServletResponse response);
    void HMC_XZ_N(HttpServletResponse response);
+   void HMC_XZ_E(HttpServletResponse response);
    void RY_CJ(HttpServletResponse response);
    void RY_CJ_N(HttpServletResponse response);
    void RY_CJ_S(HttpServletResponse response);
